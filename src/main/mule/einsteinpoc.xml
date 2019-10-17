@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:salesforce-analytics="http://www.mulesoft.org/schema/mule/salesforce-analytics"
+	xmlns:sftp="http://www.mulesoft.org/schema/mule/sftp" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/sftp http://www.mulesoft.org/schema/mule/sftp/current/mule-sftp.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/salesforce-analytics http://www.mulesoft.org/schema/mule/salesforce-analytics/current/mule-salesforce-analytics.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="25c6516c-b91b-4aad-b3fa-f1e2b735c993" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+
+	</http:listener-config>
+			<salesforce-analytics:salesforce-analytics-config name="Salesforce_Analytics_Config" doc:name="Salesforce Analytics Config" doc:id="b6b75322-cd50-4a1e-bd97-8304719ec511" >
+		<salesforce-analytics:basic-connection username="${salesforce.username}" password="${salesforce.password}" securityToken="${salesforce.token}" url="${salesforce.url}" connectionTimeout="86400000">
+			<reconnection >
+				<reconnect-forever />
+			</reconnection>
+		</salesforce-analytics:basic-connection>
+		<expiration-policy maxIdleTime="1" timeUnit="DAYS" />
+	</salesforce-analytics:salesforce-analytics-config>
+	<configuration-properties doc:name="Configuration properties" doc:id="ee8d1586-a43c-404f-9fab-2816a2bfad09" file="properties.yaml" />
+	<flow name="einsteinpocFlow" doc:id="428646d8-8d68-45f4-8573-76de5883aa98" >
+		<http:listener doc:name="Listener" doc:id="3a1cf288-bcee-4d07-9890-f09e626d8fbd" config-ref="HTTP_Listener_config" path="/test"/>
+		<salesforce-analytics:create-data-set operation="APPEND" doc:name="Create data set" doc:id="20077d49-e7c7-4ff5-8bbf-ac00c10260b8" type="testdataset.xmd.json" description="NewTest_DataSet" label="NewTest_Dataset" dataSetName="NewTest_Dataset" config-ref="Salesforce_Analytics_Config"/>
+		
+	</flow>
+</mule>

@@ -1,1 +1,1 @@
-# mule4-einstein-analytics-template
+# einstein-analytics
